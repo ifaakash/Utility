@@ -1,0 +1,52 @@
+import boto3
+import json
+
+# importing cost explorer client to query on the AWS Account
+cost_client= boto3.client('ce')
+ec2_client= boto3.client('ec2')
+
+cost_response= cost_client.get_cost_and_usage(
+    TimePeriod= {
+        'Start': "2025-04-01",
+        'End': "2025-04-20"
+    },
+    Granularity='MONTHLY',
+    Filter= {
+        "And": [
+            {
+                "Dimensions": {
+                    "Key": "SERVICE",
+                    "Values": ["Amazon Elastic Compute Cloud - Compute"]
+                }
+            },
+    #         {
+    #             'Tags': {
+    #     'Key': 'cost_management',
+    #     'Values': [
+    #         'ec2',
+    #     ],
+    #     # | 'ABSENT' | 'STARTS_WITH' | 'ENDS_WITH' | 'CONTAINS' | 'CASE_SENSITIVE' | 'CASE_INSENSITIVE' | 'GREATER_THAN_OR_EQUAL'
+    #     'MatchOptions': [
+    #         'EQUALS'
+    #     ]
+    # },
+    #         }
+        ]
+
+},
+    Metrics= [
+        'UnblendedCost'
+    ]
+)
+
+
+# Get Instance ID with tag as cost_management : ec2
+ec2_response= ec2_client.describe_instances()
+for resevation in ec2_response['Reservations']:
+    for instances in resevation['Instances']:
+        tags= instances.get('Tags', [])
+        if any(tag['Key'] == 'cost_management' for tag in tags):
+            print("Instance ID --> ", instances['InstanceId'])
+
+
+print(json.dumps(ec2_response, indent=4))
