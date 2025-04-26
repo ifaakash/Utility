@@ -1,0 +1,10 @@
+README.md
+setup.py
+gemfury/__init__.py
+gemfury/main.py
+vm_cleanup.egg-info/PKG-INFO
+vm_cleanup.egg-info/SOURCES.txt
+vm_cleanup.egg-info/dependency_links.txt
+vm_cleanup.egg-info/entry_points.txt
+vm_cleanup.egg-info/requires.txt
+vm_cleanup.egg-info/top_level.txt
