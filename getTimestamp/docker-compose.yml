@@ -1,0 +1,6 @@
+name: getIP
+services:
+  frontend:
+    build: .
+    ports:
+      - "8080:5000"
